@@ -26,13 +26,13 @@ from scrapy.utils.test import get_testenv
 
 
 def getarg(request, name, default=None, type=None):
-    if name in request.args:
-        value = request.args[name][0]
-        if type is not None:
-            value = type(value)
-        return value
-    else:
+    if name not in request.args:
         return default
+
+    value = request.args[name][0]
+    if type is not None:
+        value = type(value)
+    return value
 
 
 class LeafResource(Resource):
@@ -123,11 +123,13 @@ class Echo(LeafResource):
 
     def render_GET(self, request):
         output = {
-            'headers': dict(
-                (to_unicode(k), [to_unicode(v) for v in vs])
-                for k, vs in request.requestHeaders.getAllRawHeaders()),
+            'headers': {
+                to_unicode(k): [to_unicode(v) for v in vs]
+                for k, vs in request.requestHeaders.getAllRawHeaders()
+            },
             'body': to_unicode(request.content.read()),
         }
+
         return to_bytes(json.dumps(output))
     render_POST = render_GET
 

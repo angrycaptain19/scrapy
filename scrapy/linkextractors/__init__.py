@@ -105,9 +105,7 @@ class FilteringLinkExtractor:
             return False
         if self.deny_extensions and url_has_any_extension(parsed_url, self.deny_extensions):
             return False
-        if self.restrict_text and not _matches(link.text, self.restrict_text):
-            return False
-        return True
+        return bool(not self.restrict_text or _matches(link.text, self.restrict_text))
 
     def matches(self, url):
 

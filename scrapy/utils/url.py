@@ -149,11 +149,13 @@ def strip_url(url, strip_credentials=True, strip_default_port=True, origin_only=
     netloc = parsed_url.netloc
     if (strip_credentials or origin_only) and (parsed_url.username or parsed_url.password):
         netloc = netloc.split('@')[-1]
-    if strip_default_port and parsed_url.port:
-        if (parsed_url.scheme, parsed_url.port) in (('http', 80),
-                                                    ('https', 443),
-                                                    ('ftp', 21)):
-            netloc = netloc.replace(f':{parsed_url.port}', '')
+    if (
+        strip_default_port
+        and parsed_url.port
+        and (parsed_url.scheme, parsed_url.port)
+        in (('http', 80), ('https', 443), ('ftp', 21))
+    ):
+        netloc = netloc.replace(f':{parsed_url.port}', '')
     return urlunparse((
         parsed_url.scheme,
         netloc,

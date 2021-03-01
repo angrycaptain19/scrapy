@@ -22,7 +22,7 @@ MockSlot = collections.namedtuple('MockSlot', ['active'])
 
 class MockDownloader:
     def __init__(self):
-        self.slots = dict()
+        self.slots = {}
 
     def _get_slot_key(self, request, spider):
         if Downloader.DOWNLOAD_SLOT in request.meta:
@@ -114,7 +114,7 @@ class BaseSchedulerInMemoryTester(SchedulerHandler):
         for url, priority in _PRIORITIES:
             self.scheduler.enqueue_request(Request(url, priority=priority))
 
-        priorities = list()
+        priorities = []
         while self.scheduler.has_pending_requests():
             priorities.append(self.scheduler.next_request().priority)
 
@@ -167,7 +167,7 @@ class BaseSchedulerOnDiskTester(SchedulerHandler):
         self.close_scheduler()
         self.create_scheduler()
 
-        priorities = list()
+        priorities = []
         while self.scheduler.has_pending_requests():
             priorities.append(self.scheduler.next_request().priority)
 
@@ -259,7 +259,7 @@ class DownloaderAwareSchedulerTestMixin:
             self.close_scheduler()
             self.create_scheduler()
 
-        dequeued_slots = list()
+        dequeued_slots = []
         requests = []
         downloader = self.mock_crawler.engine.downloader
         while self.scheduler.has_pending_requests():
@@ -275,8 +275,10 @@ class DownloaderAwareSchedulerTestMixin:
             slot = downloader._get_slot_key(request, None)
             downloader.decrement(slot)
 
-        self.assertTrue(_is_scheduling_fair(list(s for u, s in _URLS_WITH_SLOTS),
-                                            dequeued_slots))
+        self.assertTrue(
+            _is_scheduling_fair([s for u, s in _URLS_WITH_SLOTS], dequeued_slots)
+        )
+
         self.assertEqual(sum(len(s.active) for s in downloader.slots.values()), 0)
 
 

@@ -19,13 +19,11 @@ class UtilsRenderTemplateFileTestCase(unittest.TestCase):
     def test_simple_render(self):
 
         context = dict(project_name='proj', name='spi', classname='TheSpider')
-        template = 'from ${project_name}.spiders.${name} import ${classname}'
-        rendered = 'from proj.spiders.spi import TheSpider'
-
         template_path = os.path.join(self.tmp_path, 'templ.py.tmpl')
         render_path = os.path.join(self.tmp_path, 'templ.py')
 
         with open(template_path, 'wb') as tmpl_file:
+            template = 'from ${project_name}.spiders.${name} import ${classname}'
             tmpl_file.write(template.encode('utf8'))
         assert os.path.isfile(template_path)  # Failure of test itself
 
@@ -33,6 +31,8 @@ class UtilsRenderTemplateFileTestCase(unittest.TestCase):
 
         self.assertFalse(os.path.exists(template_path))
         with open(render_path, 'rb') as result:
+            rendered = 'from proj.spiders.spi import TheSpider'
+
             self.assertEqual(result.read().decode('utf8'), rendered)
 
         os.remove(render_path)

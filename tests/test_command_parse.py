@@ -236,6 +236,6 @@ ITEM_PIPELINES = {{'{self.project_name}.pipelines.MyPipeline': 1}}
         self.assertTrue(exists(file_path))
         self.assertTrue(isfile(file_path))
 
-        content = '[\n{},\n{"foo": "bar"}\n]'
         with open(file_path, 'r') as f:
+            content = '[\n{},\n{"foo": "bar"}\n]'
             self.assertEqual(f.read(), content)

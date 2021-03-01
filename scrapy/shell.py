@@ -135,9 +135,11 @@ class Shell:
         print(self.get_help())
 
     def get_help(self):
-        b = []
-        b.append("Available Scrapy objects:")
-        b.append("  scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)")
+        b = [
+            "Available Scrapy objects:",
+            "  scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)",
+        ]
+
         for k, v in sorted(self.vars.items()):
             if self._is_relevant(v):
                 b.append(f"  {k:<10} {v}")

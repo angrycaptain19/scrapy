@@ -195,7 +195,7 @@ class EmptyContentTypeHeaderResource(resource.Resource):
 class LargeChunkedFileResource(resource.Resource):
     def render(self, request):
         def response():
-            for i in range(1024):
+            for _ in range(1024):
                 request.write(b"x" * 1024)
             request.finish()
         reactor.callLater(0, response)
@@ -463,9 +463,10 @@ class Http11TestCase(HttpTestCase):
         d = self.download_request(request, Spider('foo'))
 
         def checkDataLoss(failure):
-            if failure.check(ResponseFailed):
-                if any(r.check(_DataLoss) for r in failure.value.reasons):
-                    return None
+            if failure.check(ResponseFailed) and any(
+                r.check(_DataLoss) for r in failure.value.reasons
+            ):
+                return None
             return failure
 
         d.addCallback(lambda _: self.fail("No DataLoss exception"))

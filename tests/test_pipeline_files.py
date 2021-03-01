@@ -279,7 +279,7 @@ class FilesPipelineTestCaseCustomSettings(unittest.TestCase):
     def _generate_fake_settings(self, prefix=None):
 
         def random_string():
-            return "".join([chr(random.randint(97, 123)) for _ in range(10)])
+            return "".join(chr(random.randint(97, 123)) for _ in range(10))
 
         settings = {
             "FILES_EXPIRES": random.randint(100, 1000),
@@ -423,13 +423,12 @@ class TestS3FilesStore(unittest.TestCase):
         key = 'export.csv'
         uri = f's3://{bucket}/{key}'
         buffer = mock.MagicMock()
-        meta = {'foo': 'bar'}
-        path = ''
-        content_type = 'image/png'
-
         store = S3FilesStore(uri)
         from botocore.stub import Stubber
         with Stubber(store.s3_client) as stub:
+            meta = {'foo': 'bar'}
+            content_type = 'image/png'
+
             stub.add_response(
                 'put_object',
                 expected_params={
@@ -444,6 +443,7 @@ class TestS3FilesStore(unittest.TestCase):
                 service_response={},
             )
 
+            path = ''
             yield store.persist_file(
                 path,
                 buffer,
@@ -468,12 +468,12 @@ class TestS3FilesStore(unittest.TestCase):
         bucket = 'mybucket'
         key = 'export.csv'
         uri = f's3://{bucket}/{key}'
-        checksum = '3187896a9657a28163abb31667df64c8'
         last_modified = datetime(2019, 12, 1)
 
         store = S3FilesStore(uri)
         from botocore.stub import Stubber
         with Stubber(store.s3_client) as stub:
+            checksum = '3187896a9657a28163abb31667df64c8'
             stub.add_response(
                 'head_object',
                 expected_params={
