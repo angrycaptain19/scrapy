@@ -38,11 +38,14 @@ class CrawlerTestCase(BaseCrawlerTest):
         self.crawler = Crawler(DefaultSpider, Settings())
 
     def test_populate_spidercls_settings(self):
-        spider_settings = {'TEST1': 'spider', 'TEST2': 'spider'}
         project_settings = {'TEST1': 'project', 'TEST3': 'project'}
 
-        class CustomSettingsSpider(DefaultSpider):
+
+
+        class CustomSettingsSpider((DefaultSpider)):
+            spider_settings = {'TEST1': 'spider', 'TEST2': 'spider'}
             custom_settings = spider_settings
+
 
         settings = Settings()
         settings.setdict(project_settings, priority='project')

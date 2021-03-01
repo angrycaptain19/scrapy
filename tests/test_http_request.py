@@ -82,9 +82,7 @@ class RequestTest(unittest.TestCase):
         r2 = self.request_class(url=url)
         self.assertNotEqual(r1, r2)
 
-        set_ = set()
-        set_.add(r1)
-        set_.add(r2)
+        set_ = {r1, r2}
         self.assertEqual(len(set_), 2)
 
     def test_url(self):
@@ -1225,10 +1223,7 @@ def _buildresponse(body, **kwargs):
 
 
 def _qs(req, encoding='utf-8', to_unicode=False):
-    if req.method == 'POST':
-        qs = req.body
-    else:
-        qs = req.url.partition('?')[2]
+    qs = req.body if req.method == 'POST' else req.url.partition('?')[2]
     uqs = unquote_to_bytes(qs)
     if to_unicode:
         uqs = uqs.decode(encoding)
@@ -1318,11 +1313,11 @@ class JsonRequestTest(RequestTest):
 
     def test_body_data(self):
         """ passing both body and data should result a warning """
-        body = b'body'
-        data = {
-            'name': 'value',
-        }
         with warnings.catch_warnings(record=True) as _warnings:
+            body = b'body'
+            data = {
+                'name': 'value',
+            }
             r5 = self.request_class(url="http://www.example.com/", body=body, data=data)
             self.assertEqual(r5.body, body)
             self.assertEqual(r5.method, 'GET')
@@ -1331,10 +1326,10 @@ class JsonRequestTest(RequestTest):
 
     def test_empty_body_data(self):
         """ passing any body value and data should result a warning """
-        data = {
-            'name': 'value',
-        }
         with warnings.catch_warnings(record=True) as _warnings:
+            data = {
+                'name': 'value',
+            }
             r6 = self.request_class(url="http://www.example.com/", body=b'', data=data)
             self.assertEqual(r6.body, b'')
             self.assertEqual(r6.method, 'GET')
@@ -1342,10 +1337,10 @@ class JsonRequestTest(RequestTest):
             self.assertIn('data will be ignored', str(_warnings[0].message))
 
     def test_body_none_data(self):
-        data = {
-            'name': 'value',
-        }
         with warnings.catch_warnings(record=True) as _warnings:
+            data = {
+                'name': 'value',
+            }
             r7 = self.request_class(url="http://www.example.com/", body=None, data=data)
             self.assertEqual(r7.body, to_bytes(json.dumps(data)))
             self.assertEqual(r7.method, 'POST')
@@ -1398,11 +1393,11 @@ class JsonRequestTest(RequestTest):
         data1 = {
             'name1': 'value1',
         }
-        data2 = {
-            'name2': 'value2',
-        }
         r1 = self.request_class(url="http://www.example.com/", data=data1)
         with mock.patch('json.dumps', return_value=b'') as mock_dumps:
+            data2 = {
+                'name2': 'value2',
+            }
             r1.replace(data=data2)
             kwargs = mock_dumps.call_args[1]
             self.assertEqual(kwargs['sort_keys'], True)
@@ -1412,15 +1407,15 @@ class JsonRequestTest(RequestTest):
         data1 = {
             'name1': 'value1',
         }
-        data2 = {
-            'name2': 'value2',
-        }
         dumps_kwargs = {
             'ensure_ascii': True,
             'allow_nan': True,
         }
         r1 = self.request_class(url="http://www.example.com/", data=data1, dumps_kwargs=dumps_kwargs)
         with mock.patch('json.dumps', return_value=b'') as mock_dumps:
+            data2 = {
+                'name2': 'value2',
+            }
             r1.replace(data=data2)
             kwargs = mock_dumps.call_args[1]
             self.assertEqual(kwargs['ensure_ascii'], True)

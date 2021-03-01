@@ -476,9 +476,7 @@ class FeedExporter:
         return instance
 
     def _get_uri_params(self, spider, uri_params, slot=None):
-        params = {}
-        for k in dir(spider):
-            params[k] = getattr(spider, k)
+        params = {k: getattr(spider, k) for k in dir(spider)}
         utc_now = datetime.utcnow()
         params['time'] = utc_now.replace(microsecond=0).isoformat().replace(':', '-')
         params['batch_time'] = utc_now.isoformat().replace(':', '-')

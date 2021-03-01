@@ -187,7 +187,7 @@ class MaxRetryTimesTest(unittest.TestCase):
 
     def _test_retry(self, req, exception, max_retry_times):
 
-        for i in range(0, max_retry_times):
+        for _ in range(max_retry_times):
             req = self.mw.process_exception(req, exception, self.spider)
             assert isinstance(req, Request)
 

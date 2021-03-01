@@ -41,8 +41,7 @@ def iflatten(x):
     Similar to ``.flatten()``, but returns iterator instead"""
     for el in x:
         if is_listlike(el):
-            for el_ in iflatten(el):
-                yield el_
+            yield from iflatten(el)
         else:
             yield el
 

@@ -72,10 +72,7 @@ class LogFormatter:
 
     def scraped(self, item, response, spider):
         """Logs a message when an item is scraped by a spider."""
-        if isinstance(response, Failure):
-            src = response.getErrorMessage()
-        else:
-            src = response
+        src = response.getErrorMessage() if isinstance(response, Failure) else response
         return {
             'level': logging.DEBUG,
             'msg': SCRAPEDMSG,

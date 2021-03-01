@@ -256,11 +256,10 @@ class RFC2616PolicyTest(DefaultStorageTest):
             result = mw.process_request(request, self.spider)
             if result:
                 assert isinstance(result, (Request, Response))
-                return result
             else:
                 result = mw.process_response(request, response, self.spider)
                 assert isinstance(result, Response)
-                return result
+            return result
         except Exception:
             print('Request', request)
             print('Response', response)

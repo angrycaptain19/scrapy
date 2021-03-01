@@ -23,9 +23,12 @@ _collect_string_content = etree.XPath("string()")
 
 
 def _nons(tag):
-    if isinstance(tag, str):
-        if tag[0] == '{' and tag[1:len(XHTML_NAMESPACE) + 1] == XHTML_NAMESPACE:
-            return tag.split('}')[-1]
+    if (
+        isinstance(tag, str)
+        and tag[0] == '{'
+        and tag[1 : len(XHTML_NAMESPACE) + 1] == XHTML_NAMESPACE
+    ):
+        return tag.split('}')[-1]
     return tag
 
 

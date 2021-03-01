@@ -138,7 +138,11 @@ def _get_inputs(form, formdata, dont_click, clickdata, response):
 
     if not dont_click:
         clickable = _get_clickable(clickdata, form)
-        if clickable and clickable[0] not in formdata and not clickable[0] is None:
+        if (
+            clickable
+            and clickable[0] not in formdata
+            and clickable[0] is not None
+        ):
             values.append(clickable)
 
     if isinstance(formdata, dict):

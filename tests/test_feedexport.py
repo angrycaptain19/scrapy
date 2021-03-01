@@ -128,12 +128,12 @@ class FileFeedStorageTest(unittest.TestCase):
 class FTPFeedStorageTest(unittest.TestCase):
 
     def get_test_spider(self, settings=None):
+
         class TestSpider(scrapy.Spider):
             name = 'test_spider'
 
         crawler = get_crawler(settings_dict=settings)
-        spider = TestSpider.from_crawler(crawler)
-        return spider
+        return TestSpider.from_crawler(crawler)
 
     def _store(self, uri, content, feed_options=None, settings=None):
         crawler = get_crawler(settings_dict=settings or {})
@@ -206,12 +206,12 @@ class FTPFeedStorageTest(unittest.TestCase):
 class BlockingFeedStorageTest(unittest.TestCase):
 
     def get_test_spider(self, settings=None):
+
         class TestSpider(scrapy.Spider):
             name = 'test_spider'
 
         crawler = get_crawler(settings_dict=settings)
-        spider = TestSpider.from_crawler(crawler)
-        return spider
+        return TestSpider.from_crawler(crawler)
 
     def test_default_temp_dir(self):
         b = BlockingFeedStorage()
@@ -582,8 +582,7 @@ class FeedExportTestBase(ABC, unittest.TestCase):
             name = 'testspider'
 
             def parse(self, response):
-                for item in items:
-                    yield item
+                yield from items
 
         data = yield self.run_and_export(TestSpider, settings)
         return data
@@ -1689,8 +1688,7 @@ class BatchDeliveriesTest(FeedExportTestBase):
             name = 'testspider'
 
             def parse(self, response):
-                for item in items:
-                    yield item
+                yield from items
 
         with MockServer() as server:
             runner = CrawlerRunner(Settings(settings))

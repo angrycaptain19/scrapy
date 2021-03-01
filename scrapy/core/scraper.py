@@ -181,9 +181,8 @@ class Scraper:
         if not result:
             return defer_succeed(None)
         it = iter_errback(result, self.handle_spider_error, request, response, spider)
-        dfd = parallel(it, self.concurrent_items, self._process_spidermw_output,
+        return parallel(it, self.concurrent_items, self._process_spidermw_output,
                        request, response, spider)
-        return dfd
 
     def _process_spidermw_output(self, output, request, response, spider):
         """Process each Request/Item (given in the output parameter) returned
@@ -196,9 +195,7 @@ class Scraper:
             dfd = self.itemproc.process_item(output, spider)
             dfd.addBoth(self._itemproc_finished, output, response, spider)
             return dfd
-        elif output is None:
-            pass
-        else:
+        elif output is not None:
             typename = type(output).__name__
             logger.error(
                 'Spider must return request, item, or None, got %(typename)r in %(request)s',

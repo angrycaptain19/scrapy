@@ -240,8 +240,7 @@ class DbmCacheStorage:
         headers = Headers(data['headers'])
         body = data['body']
         respcls = responsetypes.from_args(headers=headers, url=url)
-        response = respcls(url=url, headers=headers, status=status, body=body)
-        return response
+        return respcls(url=url, headers=headers, status=status, body=body)
 
     def store_response(self, spider, request, response):
         key = self._request_key(request)
@@ -300,8 +299,7 @@ class FilesystemCacheStorage:
         status = metadata['status']
         headers = Headers(headers_raw_to_dict(rawheaders))
         respcls = responsetypes.from_args(headers=headers, url=url)
-        response = respcls(url=url, headers=headers, status=status, body=body)
-        return response
+        return respcls(url=url, headers=headers, status=status, body=body)
 
     def store_response(self, spider, request, response):
         """Store the given response in the cache."""

@@ -55,11 +55,7 @@ class MailSender:
 
     def send(self, to, subject, body, cc=None, attachs=(), mimetype='text/plain', charset=None, _callback=None):
         from twisted.internet import reactor
-        if attachs:
-            msg = MIMEMultipart()
-        else:
-            msg = MIMENonMultipart(*mimetype.split('/', 1))
-
+        msg = MIMEMultipart() if attachs else MIMENonMultipart(*mimetype.split('/', 1))
         to = list(arg_to_iter(to))
         cc = list(arg_to_iter(cc))
 
